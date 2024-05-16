@@ -1,5 +1,11 @@
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+const PORT = 8081;
+
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};
+let projectData = {};
 
 // Require Express to run server and routes
 
@@ -7,13 +13,26 @@ projectData = {};
 
 /* Middleware*/
 //Here we are configuring express to use body-parser as middle-ware.
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Cors for cross origin allowance
+app.use(cors());
 
 // Initialize the main project folder
-app.use(express.static('website'));
-
+app.use(express.static("website"));
 
 // Setup Server
+
+app.get("/weather", (req, res) => {
+  res.status(200).send(projectData);
+});
+
+app.post("/update-weather", (req, res) => {
+  projectData = { ...req.body };
+  res.status(201).send({ success: true });
+});
+
+app.listen(PORT, () => {
+  console.log(`App is running at port ${PORT}`);
+});
